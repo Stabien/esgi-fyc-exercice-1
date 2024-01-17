@@ -1,32 +1,21 @@
 <script>
-  import { get } from 'svelte/store';
+  import { fade } from 'svelte/transition';
   import RecipeList from '../lib/RecipeList.svelte';
-  import { recipeStore } from '../store';
-  import { onDestroy } from 'svelte';
-
-  let recipeStoreValue = get(recipeStore);
-
-  const unsubscribe = recipeStore.subscribe(
-    (store) => (recipeStoreValue = store)
-  );
-
-  $: dailyRecipes = recipeStoreValue.recipes.filter(
-    (recipe) => recipe.dailyRecipe !== undefined
-  );
-
-  onDestroy(unsubscribe);
+  import { fetchRecipes } from '../services';
 </script>
 
-<div>
+<div class="container">
   <h1>Bienvenue sur Sveltmiton</h1>
   <h2>Nos recettes du jour</h2>
-  {#if !recipeStoreValue.isLoaded}
+  {#await fetchRecipes()}
     <span>Chargement des recettes du jour...</span>
-  {:else if recipeStoreValue.error}
+  {:then recipes}
+    <div in:fade={{ duration: 200 }}>
+      <RecipeList recipes={recipes.filter((recipe) => recipe.isDaily)} />
+    </div>
+  {:catch}
     <span>Impossible de charger les recettes du jour</span>
-  {:else}
-    <RecipeList recipes={dailyRecipes} />
-  {/if}
+  {/await}
 </div>
 
 <style>
@@ -41,7 +30,7 @@
     margin-top: 40px;
     border: 2px solid #ff6f61;
   }
-  div {
+  .container {
     display: flex;
     flex-direction: column;
     width: fit-content;

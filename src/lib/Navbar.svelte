@@ -1,6 +1,14 @@
 <script>
-  import { Link } from 'svelte-navigator';
+  import { Link, useNavigate } from 'svelte-navigator';
   import Searchbar from './Searchbar.svelte';
+  import { regexSearch } from '../utils';
+
+  const navigate = useNavigate();
+  const onSearch = (event) => {
+    if (regexSearch.test(event.detail.value)) {
+      navigate(`/recipes/search/${event.detail.value}`);
+    }
+  };
 </script>
 
 <nav>
@@ -9,12 +17,9 @@
       <Link to="/">Sveltmiton</Link>
     </h1>
     <div class="searchbar-container">
-      <Searchbar placeholder="Rechercher une recette..." />
+      <Searchbar on:search={onSearch} placeholder="Rechercher une recette..." />
     </div>
   </div>
-  <span>
-    <Link to="/favorites">Mes recettes favorites</Link>
-  </span>
 </nav>
 
 <style>
@@ -42,8 +47,6 @@
     color: #ff6f61;
     margin: auto 10;
   }
-
-  nav span,
   .searchbar-container {
     margin: auto 10px;
   }
@@ -52,20 +55,5 @@
     margin-left: 20px;
     margin-right: 30px;
     width: 600px;
-  }
-
-  nav span {
-    margin-left: auto;
-    margin-right: 0;
-    background: #ff6f61;
-    padding: 12px;
-    border-radius: 24px;
-    font-size: 16px;
-  }
-
-  nav span > :global(a) {
-    color: white;
-    text-decoration: none;
-    margin: auto 10px;
   }
 </style>

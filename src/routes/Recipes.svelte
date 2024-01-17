@@ -1,30 +1,43 @@
 <script>
-  import { get } from 'svelte/store';
+  import { onMount } from 'svelte';
   import RecipeList from '../lib/RecipeList.svelte';
-  import { recipeStore } from '../store';
-  import { onDestroy } from 'svelte';
+  import { fetchRecipes } from '../services';
+  import { useParams } from 'svelte-navigator';
+  import { fade } from 'svelte/transition';
 
-  let recipeStoreValue = get(recipeStore);
+  const params = useParams();
 
-  const unsubscribe = recipeStore.subscribe(
-    (store) => (recipeStoreValue = store)
+  let recipes = [];
+  let isLoaded = false;
+  let error = null;
+
+  $: searchRecipes = recipes.filter((recipe) =>
+    recipe.name.toLowerCase().includes($params.search.toLowerCase())
   );
 
-  $: searchRecipes = recipeStoreValue.recipes.filter((recipe) =>
-    recipe.name.toLowerCase().includes(recipeStoreValue.search.toLowerCase())
-  );
-
-  onDestroy(unsubscribe);
+  onMount(async () => {
+    try {
+      recipes = await fetchRecipes();
+      console.log(recipes);
+      isLoaded = true;
+    } catch (e) {
+      error = e;
+    }
+  });
 </script>
 
 <div>
   <h1>Toutes nos recettes</h1>
-  {#if !recipeStoreValue.isLoaded}
+  {#if !isLoaded}
     <span>Chargement des recettes...</span>
-  {:else if recipeStoreValue.error}
+  {:else if error}
     <span>Impossible de charger les recettes du jour</span>
+  {:else if searchRecipes.length === 0 && isLoaded}
+    <span>Aucune recette trouvée pour cette recherche</span>
   {:else}
-    <RecipeList recipes={searchRecipes} />
+    <div in:fade={{ duration: 200 }}>
+      <RecipeList recipes={searchRecipes} />
+    </div>
   {/if}
 </div>
 

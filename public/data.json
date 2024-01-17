@@ -10,7 +10,7 @@
       {"name": "Parmesan râpé", "quantity": 30, "type": "WEIGHT"},
       {"name": "Sauce César", "quantity": 50, "type": "WEIGHT"}
     ],
-    "dailyRecipe": true
+    "isDaily": true
   },
   {
     "id": 2,
@@ -51,7 +51,7 @@
       {"name": "Poivre", "quantity": 3, "type": "WEIGHT"},
       {"name": "Huile d'olive", "quantity": 30, "type": "WEIGHT"}
     ],
-    "dailyRecipe": true
+    "isDaily": true
   },
   {
     "id": 5,
@@ -78,7 +78,7 @@
       {"name": "Gousses d'ail", "quantity": 2, "type": "PIECE"},
       {"name": "Riz basmati", "quantity": 150, "type": "WEIGHT"}
     ],
-    "dailyRecipe": true
+    "isDaily": true
   },
   {
     "id": 7,
