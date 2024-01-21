@@ -1,11 +1,11 @@
 <script>
   import { Link, useNavigate } from 'svelte-navigator';
   import Searchbar from './Searchbar.svelte';
-  import { regexSearch } from '../utils';
+  import { isMatchingSearchRegex } from '../utils';
 
   const navigate = useNavigate();
   const onSearch = (event) => {
-    if (regexSearch.test(event.detail.value)) {
+    if (isMatchingSearchRegex(event.detail.value)) {
       navigate(`/recipes/search/${event.detail.value}`);
     }
   };

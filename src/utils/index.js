@@ -1,1 +1,3 @@
-export const regexSearch = /[a-zA-Z]/
+const searchRegex = /[a-zA-Z]/
+
+export const isMatchingSearchRegex = (search) => searchRegex.test(search)
